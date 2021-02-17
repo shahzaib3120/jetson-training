@@ -13,6 +13,10 @@ from vision.ssd.mobilenetv1_ssd_lite import create_mobilenetv1_ssd_lite
 from vision.ssd.squeezenet_ssd_lite import create_squeezenet_ssd_lite
 from vision.ssd.mobilenet_v2_ssd_lite import create_mobilenetv2_ssd_lite
 
+from vision.ssd.config import vgg_ssd_config
+from vision.ssd.config import mobilenetv1_ssd_config
+from vision.ssd.config import squeezenet_ssd_config
+
 
 # parse command line
 parser = argparse.ArgumentParser()
@@ -20,8 +24,6 @@ parser.add_argument('--net', default="ssd-mobilenet", help="The network architec
 parser.add_argument('--input', type=str, default='', help="path to input PyTorch model (.pth checkpoint)")
 parser.add_argument('--output', type=str, default='', help="desired path of converted ONNX model (default: <NET>.onnx)")
 parser.add_argument('--labels', type=str, default='labels.txt', help="name of the class labels file")
-parser.add_argument('--width', type=int, default=300, help="input width of the model to be exported (in pixels)")
-parser.add_argument('--height', type=int, default=300, help="input height of the model to be exported (in pixels)")
 parser.add_argument('--batch-size', type=int, default=1, help="batch size of the model to be exported (default=1)")
 parser.add_argument('--model-dir', type=str, default='', help="directory to look for the input PyTorch model in, and export the converted ONNX model to (if --output doesn't specify a directory)")
 
@@ -68,14 +70,19 @@ print('num classes:       ' + str(num_classes))
 
 if args.net == 'vgg16-ssd':
     net = create_vgg_ssd(len(class_names), is_test=True)
+    config = vgg_ssd_config
 elif args.net == 'mb1-ssd' or args.net == 'ssd-mobilenet':
     net = create_mobilenetv1_ssd(len(class_names), is_test=True)
+    config = mobilenetv1_ssd_config
 elif args.net == 'mb1-ssd-lite':
     net = create_mobilenetv1_ssd_lite(len(class_names), is_test=True)
+    config = mobilenetv1_ssd_config
 elif args.net == 'mb2-ssd-lite':
     net = create_mobilenetv2_ssd_lite(len(class_names), is_test=True)
+    config = mobilenetv1_ssd_config
 elif args.net == 'sq-ssd-lite':
     net = create_squeezenet_ssd_lite(len(class_names), is_test=True)
+    config = squeezenet_ssd_config
 else:
     print("The net type is wrong. It should be one of vgg16-ssd, mb1-ssd and mb1-ssd-lite.")
     sys.exit(1)
@@ -88,7 +95,8 @@ net.to(device)
 net.eval()
 
 # create example image data
-dummy_input = torch.randn(args.batch_size, 3, args.height, args.width).cuda()
+dummy_input = torch.randn(args.batch_size, 3, config.image_size, config.image_size).cuda()
+print('input image size:  {:d}x{:d}'.format(config.image_size, config.image_size))
 
 # format output model path
 if not args.output:

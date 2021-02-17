@@ -198,6 +198,8 @@ if __name__ == '__main__':
         parser.print_help(sys.stderr)
         sys.exit(1)
         
+    logging.info("Model input image size:  {:d}x{:d}".format(config.image_size, config.image_size))
+    
     # create data transforms for train/test/val
     train_transform = TrainAugmentation(config.image_size, config.image_mean, config.image_std)
     target_transform = MatchPrior(config.priors, config.center_variance,
