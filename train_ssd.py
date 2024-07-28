@@ -40,7 +40,7 @@ parser = argparse.ArgumentParser(
     description='Single Shot MultiBox Detector Training With PyTorch')
 
 # Params for datasets
-parser.add_argument("--dataset-type", default="open_images", type=str,
+parser.add_argument("--dataset-type", default="voc", type=str,
                     help='Specify dataset type. Currently supports voc and open_images.')
 parser.add_argument('--datasets', '--data', nargs='+', default=["data"], help='Dataset directory path')
 parser.add_argument('--balance-data', action='store_true',
@@ -104,7 +104,7 @@ parser.add_argument('--debug-steps', default=10, type=int,
                     help='Set the debug log output frequency.')
 parser.add_argument('--use-cuda', default=True, action='store_true',
                     help='Use CUDA to train model')
-parser.add_argument('--checkpoint-folder', '--model-dir', default='models/',
+parser.add_argument('--checkpoint-folder', '--model-dir', default='models/train',
                     help='Directory for saving checkpoint models')
 parser.add_argument('--log-level', default='info', type=str,
                     help='Logging level, one of:  debug, info, warning, error, critical (default: info)')

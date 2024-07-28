@@ -58,7 +58,7 @@ if args.model_dir:
         
     # append the model dir (if needed)
     if not os.path.isfile(args.input):
-	    args.input = os.path.join(args.model_dir, args.input)
+        args.input = os.path.join(args.model_dir, args.input)
 
     if not os.path.isfile(args.labels):
         args.labels = os.path.join(args.model_dir, args.labels)
